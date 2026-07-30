@@ -1,16 +1,15 @@
 import 'dotenv/config';
 import pg from 'pg';
 
-const pool = new pg.Pool({
+const BASE = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME || 'xrant',
   port: parseInt(process.env.DB_PORT || '5432'),
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+  ssl: { rejectUnauthorized: false },
+};
+
+const pool = new pg.Pool({ ...BASE, database: process.env.DB_NAME || 'xrant' });
 
 const schemas = [
   `CREATE TABLE IF NOT EXISTS rants (
@@ -52,13 +51,7 @@ const schemas = [
 
 async function initDB() {
   const dbName = process.env.DB_NAME || 'xrant';
-  const adminPool = new pg.Pool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD,
-    database: 'postgres',
-    port: parseInt(process.env.DB_PORT || '5432'),
-  });
+  const adminPool = new pg.Pool({ ...BASE, database: 'postgres' });
   try {
     await adminPool.query(`CREATE DATABASE "${dbName}"`);
   } catch (e) {
@@ -66,13 +59,7 @@ async function initDB() {
   }
   await adminPool.end();
 
-  const conn = new pg.Pool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD,
-    database: dbName,
-    port: parseInt(process.env.DB_PORT || '5432'),
-  });
+  const conn = new pg.Pool({ ...BASE, database: dbName });
   for (const sql of schemas) {
     await conn.query(sql);
   }
