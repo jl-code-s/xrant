@@ -7,6 +7,9 @@ const pool = new pg.Pool({
   password: process.env.DB_PASSWORD || '007622',
   database: process.env.DB_NAME || 'xrant',
   port: parseInt(process.env.DB_PORT || '5432'),
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const schemas = [
