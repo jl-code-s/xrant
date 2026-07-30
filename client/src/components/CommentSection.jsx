@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import ReactionButtons from './ReactionButtons';
 import { formatDate } from '../formatDate';
+import { api } from '../api';
 
 function ReplyForm({ onSubmit, onCancel }) {
   const [text, setText] = useState('');
@@ -42,7 +43,7 @@ function ReplyItem({ reply, parentName, username, localName, onReply }) {
 
   function handleReply(text) {
     const name = username.trim() || localName.trim() || 'Anonymous';
-    fetch(`/api/rants/${reply.rant_id}/comments`, {
+    api(`/api/rants/${reply.rant_id}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: name, content: text, parent_id: reply.id }),
@@ -89,7 +90,7 @@ function ReplyItem({ reply, parentName, username, localName, onReply }) {
                 e.preventDefault();
                 const name = username.trim() || localName.trim() || 'Anonymous';
                 try {
-                  const res = await fetch(`/api/comments/${reply.id}/report`, {
+                  const res = await api(`/api/comments/${reply.id}/report`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: name, reason: reportReason.trim() || null }),
@@ -125,7 +126,7 @@ function CommentItem({ comment, replies, username, localName, onReply }) {
 
   function handleReply(text) {
     const name = username.trim() || localName.trim() || 'Anonymous';
-    fetch(`/api/rants/${comment.rant_id}/comments`, {
+    api(`/api/rants/${comment.rant_id}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: name, content: text, parent_id: comment.id }),
@@ -170,7 +171,7 @@ function CommentItem({ comment, replies, username, localName, onReply }) {
                   e.preventDefault();
                   const name = username.trim() || localName.trim() || 'Anonymous';
                   try {
-                    const res = await fetch(`/api/comments/${comment.id}/report`, {
+                    const res = await api(`/api/comments/${comment.id}/report`, {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ username: name, reason: reportReason.trim() || null }),
@@ -221,7 +222,7 @@ export default function CommentSection({ rantId, username }) {
   const [posting, setPosting] = useState(false);
 
   function loadComments() {
-    fetch(`/api/rants/${rantId}/comments`)
+    api(`/api/rants/${rantId}/comments`)
       .then(async (r) => { if (!r.ok) throw new Error('Failed'); return r.json(); })
       .then(setComments)
       .catch(console.error);
@@ -235,7 +236,7 @@ export default function CommentSection({ rantId, username }) {
     if (!newComment.trim()) return;
     setPosting(true);
     try {
-      const res = await fetch(`/api/rants/${rantId}/comments`, {
+      const res = await api(`/api/rants/${rantId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: name, content: newComment.trim() }),

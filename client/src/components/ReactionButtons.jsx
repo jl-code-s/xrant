@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { api } from '../api';
 
 const REACTIONS = [
   { type: 'like',    emoji: '👍', label: 'Like' },
@@ -44,7 +45,7 @@ export default function ReactionButtons({ rantId, commentId, likes, dislikes, us
     const name = username.trim() || 'Anonymous';
     setShowPicker(false);
     try {
-      const res = await fetch('/api/reactions', {
+      const res = await api('/api/reactions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rant_id: rantId || null, comment_id: commentId || null, username: name, type }),

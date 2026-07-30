@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../api';
 
 export default function ReportButton({ rantId, username }) {
   const [showModal, setShowModal] = useState(false);
@@ -11,7 +12,7 @@ export default function ReportButton({ rantId, username }) {
     const name = username.trim() || 'Anonymous';
     setSending(true);
     try {
-      const res = await fetch(`/api/rants/${rantId}/report`, {
+      const res = await api(`/api/rants/${rantId}/report`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: name, reason: reason.trim() || null }),

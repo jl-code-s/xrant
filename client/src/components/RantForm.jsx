@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../api';
 
 export default function RantForm({ username, onRantCreated }) {
   const [localName, setLocalName] = useState('');
@@ -14,7 +15,7 @@ export default function RantForm({ username, onRantCreated }) {
     setPosting(true);
     setError('');
     try {
-      const res = await fetch('/api/rants', {
+      const res = await api('/api/rants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

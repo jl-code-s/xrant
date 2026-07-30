@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import RantForm from './components/RantForm';
 import RantCard from './components/RantCard';
 import AdminPage from './components/AdminPage';
+import { api } from './api';
 
 export default function App() {
   const [rants, setRants] = useState([]);
@@ -17,7 +18,7 @@ export default function App() {
   const loadRants = useCallback(async (code) => {
     try {
       const params = code?.trim() ? `?code=${encodeURIComponent(code.trim())}` : '';
-      const res = await fetch(`/api/rants${params}`);
+      const res = await api(`/api/rants${params}`);
       if (!res.ok) throw new Error('Server error');
       const data = await res.json();
       setRants(data);

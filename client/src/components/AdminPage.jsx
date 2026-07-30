@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { formatDate } from '../formatDate';
 import ConfirmModal from './ConfirmModal';
+import { api } from '../api';
 
 function Tab({ label, active, onClick }) {
   return (
@@ -24,7 +25,7 @@ export default function AdminPage({ onBack }) {
   useEffect(() => {
     setLoading(true);
     const path = tab === 'reports' ? '/api/admin/reports' : tab === 'rants' ? '/api/admin/rants' : '/api/admin/comments';
-    fetch(path)
+    api(path)
       .then(async (r) => { if (!r.ok) throw new Error('Failed'); return r.json(); })
       .then((data) => {
         if (tab === 'reports') setReports(data);
@@ -38,7 +39,7 @@ export default function AdminPage({ onBack }) {
   function reloadTab() {
     setLoading(true);
     const path = tab === 'reports' ? '/api/admin/reports' : tab === 'rants' ? '/api/admin/rants' : '/api/admin/comments';
-    fetch(path)
+    api(path)
       .then(async (r) => { if (!r.ok) throw new Error('Failed'); return r.json(); })
       .then((data) => {
         if (tab === 'reports') setReports(data);
@@ -50,12 +51,12 @@ export default function AdminPage({ onBack }) {
   }
 
   async function deleteRant(id) {
-    await fetch(`/api/rants/${id}`, { method: 'DELETE' });
+    await api(`/api/rants/${id}`, { method: 'DELETE' });
     reloadTab();
   }
 
   async function archiveRant(id, archived) {
-    await fetch(`/api/admin/rants/${id}/archive`, {
+    await api(`/api/admin/rants/${id}/archive`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ archived }),
@@ -64,7 +65,7 @@ export default function AdminPage({ onBack }) {
   }
 
   async function archiveComment(id, archived) {
-    await fetch(`/api/admin/comments/${id}/archive`, {
+    await api(`/api/admin/comments/${id}/archive`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ archived }),
@@ -73,7 +74,7 @@ export default function AdminPage({ onBack }) {
   }
 
   async function deleteComment(id) {
-    await fetch(`/api/admin/comments/${id}`, { method: 'DELETE' });
+    await api(`/api/admin/comments/${id}`, { method: 'DELETE' });
     reloadTab();
   }
 
