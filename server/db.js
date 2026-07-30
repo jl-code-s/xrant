@@ -4,7 +4,7 @@ import pg from 'pg';
 const pool = new pg.Pool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || '007622',
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || 'xrant',
   port: parseInt(process.env.DB_PORT || '5432'),
   ssl: {
@@ -55,7 +55,7 @@ async function initDB() {
   const adminPool = new pg.Pool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || '007622',
+    password: process.env.DB_PASSWORD,
     database: 'postgres',
     port: parseInt(process.env.DB_PORT || '5432'),
   });
@@ -69,7 +69,7 @@ async function initDB() {
   const conn = new pg.Pool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || '007622',
+    password: process.env.DB_PASSWORD,
     database: dbName,
     port: parseInt(process.env.DB_PORT || '5432'),
   });
